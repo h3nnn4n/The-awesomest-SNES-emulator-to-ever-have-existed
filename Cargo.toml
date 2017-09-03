@@ -1,0 +1,6 @@
+[package]
+name = "artificial-snes"
+version = "0.1.0"
+authors = ["Eu <karllhenning64@gmail.com>"]
+
+[dependencies]
