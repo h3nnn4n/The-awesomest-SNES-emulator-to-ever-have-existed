@@ -37,7 +37,7 @@ fn main() {
     }
 }
 
-fn show_gui_function<'a>(ui: &imgui::Ui<'a>) -> bool {
+fn show_gui_function<'a> (ui: &imgui::Ui<'a>) -> bool {
     use imgui::*;
     ui.window(im_str!("Hello SNES thing :D"))
         .size((300.0, 100.0), ImGuiSetCond_FirstUseEver)
@@ -50,6 +50,19 @@ fn show_gui_function<'a>(ui: &imgui::Ui<'a>) -> bool {
                 mouse_pos.0,
                 mouse_pos.1
             ));
+        });
+
+
+    true
+}
+
+fn show_cpu_window<'a> (ui: &imgui::Ui<'a>, snes: &Snes) -> bool {
+    use imgui::*;
+    ui.window(im_str!("CPU Status"))
+        .size((300.0, 100.0), ImGuiSetCond_FirstUseEver)
+        .build(|| {
+            ui.text(im_str!("A:"));
+            ui.separator();            
         });
 
     true
