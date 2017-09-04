@@ -1,6 +1,14 @@
 [package]
 name = "artificial-snes"
 version = "0.1.0"
-authors = ["Eu <karllhenning64@gmail.com>"]
+authors = ["Eu <placeholder@a.com>"]
 
 [dependencies]
+sdl2 = "0.30"
+glium_sdl2 = { git = "https://github.com/Gekkio/glium-sdl2.git", branch = "glium0.16-sdl0.30" }
+imgui = "0.0.14"
+imgui-glium-renderer = "0.0.14"
+
+[dependencies.glium]
+version = "0.16"
+default-features = false
