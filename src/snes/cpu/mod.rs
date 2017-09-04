@@ -14,7 +14,7 @@ pub struct CPU {
 }
 
 impl CPU {
-    pub fn new() -> CPU {
+    pub fn new () -> CPU {
         println!("I'm the most greatest S-CPU ever!");
         CPU {
             acc: 0,
@@ -27,4 +27,13 @@ impl CPU {
             pc: 0x0,
         }
     }
+
+    pub fn get_acc (&self) -> u16 { self.pc }
+    pub fn get_x   (&self) -> u16 { self.x }
+    pub fn get_y   (&self) -> u16 { self.y }
+    pub fn get_sp  (&self) -> u16 { self.sp }
+    pub fn get_db  (&self) -> u16 { self.db }
+    pub fn get_pb  (&self) -> u16 { self.pb }
+    pub fn get_s   (&self) -> u16 { self.status }
+    pub fn get_pc  (&self) -> u16 { self.pc }
 }
