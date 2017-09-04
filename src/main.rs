@@ -18,7 +18,7 @@ fn main() {
         let start_instant = Instant::now();
 
         context.handle_events();
-        context.render();        
+        context.render_frame();        
 
         // Calculate elapsed time this frame
         let elapsed = start_instant.elapsed(); 
