@@ -36,6 +36,7 @@ impl App {
             let start_instant = Instant::now();
             
             self.frontend.handle_events();
+            
             let &mut App { ref snes, ..} = self;
             self.frontend.render_frame(|ui| {
                 show_gui_function(ui);
@@ -87,8 +88,8 @@ fn show_cpu_window<'a> (ui: &imgui::Ui<'a>, snes: &Snes) -> bool {
     ui.window(im_str!("CPU Status"))
         .size((300.0, 100.0), ImGuiSetCond_FirstUseEver)
         .build(|| {
-            ui.text(im_str!("A: 0x{:04X}", cpu.get_acc())); ui.same_line_spacing(0.0, 15.0);
-            ui.text(im_str!("S: 0x{:04X}", cpu.get_s()));
+            ui.text(im_str!("A: 0x{:04X}", cpu.get_a())); ui.same_line_spacing(0.0, 15.0);
+            ui.text(im_str!("P: 0x{:04X}", cpu.get_p()));
             
             ui.text(im_str!("X: 0x{:04X}", cpu.get_x())); ui.same_line_spacing(0.0, 15.0);
             ui.text(im_str!("Y: 0x{:04X}", cpu.get_y()));
