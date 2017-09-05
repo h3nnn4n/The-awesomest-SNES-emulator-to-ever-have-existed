@@ -1,4 +1,6 @@
 
+
+#[cfg_attr(rustfmt, rustfmt_skip)]
 pub enum Register {
     A, X, Y, SP, DB, PB, P
 }
@@ -12,11 +14,11 @@ pub struct Registers {
     pub db: u16,
     pub pb: u8,
     pub p: u8,
-    pub pc: u16, 
+    pub pc: u16,
 }
 
 impl Registers {
-    pub fn new () -> Registers {
+    pub fn new() -> Registers {
         Registers {
             a: 0,
             x: 0,

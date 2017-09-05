@@ -1,6 +1,3 @@
-// https://en.wikibooks.org/wiki/Super_NES_Programming/65c816_reference
-// https://github.com/michielvoo/SNES/wiki/CPU
-// https://wiki.superfamicom.org/snes/show/65816+Reference
 
 mod registers;
 use self::registers::Registers;
@@ -10,13 +7,15 @@ pub struct CPU {
 }
 
 impl CPU {
-    pub fn new () -> CPU {
+    pub fn new() -> CPU {
         println!("I'm the most greatest S-CPU ever!");
-        CPU {
-            regs: Registers::new(),
-        }
+        CPU { regs: Registers::new() }
     }
+}
 
+
+#[cfg_attr(rustfmt, rustfmt_skip)]
+impl CPU {
     pub fn get_a   (&self) -> u16 { self.regs.a }
     pub fn get_x   (&self) -> u16 { self.regs.x }
     pub fn get_y   (&self) -> u16 { self.regs.y }

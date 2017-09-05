@@ -10,15 +10,15 @@ pub struct Snes {
 }
 
 impl Snes {
-    pub fn new () -> Snes {
+    pub fn new() -> Snes {
         println!("I'm the greatest Snes struct ever!");
-        Snes{ 
+        Snes {
             cpu: CPU::new(),
             ppu: PPU::new(),
         }
     }
 
-    pub fn get_cpu (&self) -> &CPU {
+    pub fn get_cpu(&self) -> &CPU {
         &self.cpu
     }
 }
