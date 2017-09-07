@@ -1,5 +1,7 @@
 
 
+
+#[derive(Clone, Copy)]
 #[cfg_attr(rustfmt, rustfmt_skip)]
 pub enum Register {
     A, X, Y, SP, DB, PB, P

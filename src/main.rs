@@ -30,12 +30,10 @@ impl App {
 
     pub fn run(&mut self) {
         let mut delta_time = 16.666667;
-
-
-
-
-        println!("{}", Instruction::Adc(09).to_asm_str());
-        println!("{}", Instruction::Adc16(0xBEEF).to_asm_str());
+        let code: [u8; 4] = [0x69, 0xFF, 0x23, 0xF2];
+        // println!("{}", Instruction::Adc(09).to_asm_str());
+        // println!("{}", Instruction::Adc16(0xBEEF).to_asm_str());
+        println!("{}", disassemble(&code));
         
         // App's master loop
         loop {
