@@ -1,5 +1,5 @@
-
-mod registers;
+pub mod instructions;
+pub mod registers;
 use self::registers::Registers;
 
 pub struct CPU {
@@ -12,7 +12,6 @@ impl CPU {
         CPU { regs: Registers::new() }
     }
 }
-
 
 #[cfg_attr(rustfmt, rustfmt_skip)]
 impl CPU {

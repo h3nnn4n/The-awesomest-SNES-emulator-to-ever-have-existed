@@ -1,5 +1,5 @@
-mod cpu;
-mod ppu;
+pub mod cpu;
+pub mod ppu;
 
 use self::cpu::CPU;
 use self::ppu::PPU;

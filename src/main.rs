@@ -8,6 +8,7 @@ mod frontend;
 use frontend::Frontend;
 mod snes;
 use snes::Snes;
+use snes::cpu::instructions::*; 
 
 fn main() {
     let mut app = App::new();
@@ -30,6 +31,12 @@ impl App {
     pub fn run(&mut self) {
         let mut delta_time = 16.666667;
 
+
+
+
+        println!("{}", Instruction::Adc(09).to_asm_str());
+        println!("{}", Instruction::Adc16(0xBEEF).to_asm_str());
+        
         // App's master loop
         loop {
             let start_instant = Instant::now();
