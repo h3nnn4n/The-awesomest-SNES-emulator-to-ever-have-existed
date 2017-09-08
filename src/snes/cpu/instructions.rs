@@ -10,16 +10,14 @@ enum AddressMode {
     Relative,
     RelativeLong,
     Direct,
-    DirectIndexX,
-    DirectIndexY,
+    DirectIndexed,
     DirectIndirect,
     DirectIndexedIndirect,
     DirectIndirectIndexed,
     DirectIndirectLong,
     DirectIndirectIndexedLong,
     Absolute,
-    AbsoluteIndexedX,
-    AbsoluteIndexedY,
+    AbsoluteIndexed,
     AbsoluteLong,
     AbsoluteIndexedLong,
     StackRelative,
@@ -212,13 +210,11 @@ fn binary_op<A: ToAsmStr>(op: &'static str, arg1: A, arg2: A, mode: AddressMode)
     let str1 = arg1.to_asm_str();
     let str2 = arg2.to_asm_str();
     match mode {
-        Mode::DirectIndexX              => (format!("{} {}, {}", op, str1, str2)).into(),
-        Mode::DirectIndexY              => (format!("{} {}, {}", op, str1, str2)).into(),
+        Mode::DirectIndexed              => (format!("{} {}, {}", op, str1, str2)).into(), 
         Mode::DirectIndexedIndirect     => (format!("{} ({}, {})", op, str1, str2)).into(),
         Mode::DirectIndirectIndexed     => (format!("{} ({}), {}", op, str1, str2)).into(),
         Mode::DirectIndirectIndexedLong => (format!("{} [{}], {}", op, str1, str2)).into(),
-        Mode::AbsoluteIndexedX          => (format!("{} {}, {}", op, str1, str2)).into(),
-        Mode::AbsoluteIndexedY          => (format!("{} {}, {}", op, str1, str2)).into(),
+        Mode::AbsoluteIndexed           => (format!("{} {}, {}", op, str1, str2)).into(), 
         Mode::AbsoluteIndexedLong       => (format!("{} {}, {}", op, str1, str2)).into(),
         Mode::StackRelative             => (format!("{} {}, {}", op, str1, str2)).into(),
         Mode::AbsoluteIndexedIndirect   => (format!("{} {}, {}", op, str1, str2)).into(),
@@ -248,6 +244,7 @@ impl ToAsmStr for Instruction {
         match *self {
             Adc1(op0, mode) => unary_op("ADC", op0, mode),
             Adc2(op0, op1, mode) => binary_op("ADC", op0, op1, mode),
+            Adc3(op0, op1, op3, mode) => ternary_op("ADC", op0, op1, op3, mode),
             And1(op0, mode) => unary_op("AND", op0, mode),
             And2(op0, op1, mode) => binary_op("AND", op0, op1, mode),
             _ => panic!("¯\\_(ツ)_/¯"),
@@ -278,6 +275,18 @@ pub fn disassemble(code: &[u8]) -> AsmStr {
         0x71 => Instruction::Adc2(Imm8(as8), Reg(Y), DirectIndirectIndexed),
         0x72 => Instruction::Adc1(Imm8(as8), DirectIndirect),
         0x73 => Instruction::Adc3(Imm8(as8), Reg(S), Reg(Y), StackRelativeIndirectIndexed),
+        0x75 => Instruction::Adc2(Imm8(as8), Reg(X), DirectIndexed),
+        0x77 => Instruction::Adc2(Imm8(as8), Reg(Y), DirectIndirectIndexedLong),
+        0x79 => Instruction::Adc2(Imm8(as8), Reg(Y), AbsoluteIndexed),
+        0x7D => Instruction::Adc2(Imm16(as16), Reg(X), AbsoluteIndexed),
+        0x7F => Instruction::Adc2(Imm24(as24), Reg(X), AbsoluteIndexedLong),
+
+        // AND Instructions
+        // ...
+
+        // ASL Instructions
+        // ...
+        
         _ => panic!("Unknown opcode {}", opcode),
     };
 

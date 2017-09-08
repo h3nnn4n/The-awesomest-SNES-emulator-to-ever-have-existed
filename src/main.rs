@@ -8,7 +8,7 @@ mod frontend;
 use frontend::Frontend;
 mod snes;
 use snes::Snes;
-use snes::cpu::instructions::*; 
+use snes::cpu::instructions::*;
 
 fn main() {
     let mut app = App::new();
@@ -38,7 +38,14 @@ impl App {
         let code6D: [u8; 4] = [0x6D, 0xFF, 0xEE, 0xDD];
         let code6F: [u8; 4] = [0x6F, 0xFF, 0xEE, 0xDD];
         let code71: [u8; 4] = [0x71, 0xFF, 0xEE, 0xDD];
-       
+        let code72: [u8; 4] = [0x72, 0xFF, 0xEE, 0xDD];
+        let code73: [u8; 4] = [0x73, 0xFF, 0xEE, 0xDD];
+        let code75: [u8; 4] = [0x75, 0xFF, 0xEE, 0xDD];
+        let code77: [u8; 4] = [0x77, 0xFF, 0xEE, 0xDD];
+        let code79: [u8; 4] = [0x79, 0xFF, 0xEE, 0xDD];
+        let code7D: [u8; 4] = [0x7D, 0xFF, 0xEE, 0xDD];
+        let code7F: [u8; 4] = [0x7F, 0xFF, 0xEE, 0xDD];
+
         println!("{}", disassemble(&code61));
         println!("{}", disassemble(&code63));
         println!("{}", disassemble(&code65));
@@ -47,8 +54,14 @@ impl App {
         println!("{}", disassemble(&code6D));
         println!("{}", disassemble(&code6F));
         println!("{}", disassemble(&code71));
- 
-        
+        println!("{}", disassemble(&code72));
+        println!("{}", disassemble(&code73));
+        println!("{}", disassemble(&code75));
+        println!("{}", disassemble(&code77));
+        println!("{}", disassemble(&code79));
+        println!("{}", disassemble(&code7D));
+        println!("{}", disassemble(&code7F));
+
         // App's master loop
         loop {
             let start_instant = Instant::now();
