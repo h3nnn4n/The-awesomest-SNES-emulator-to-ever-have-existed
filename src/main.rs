@@ -30,10 +30,24 @@ impl App {
 
     pub fn run(&mut self) {
         let mut delta_time = 16.666667;
-        let code: [u8; 4] = [0x69, 0xFF, 0x23, 0xF2];
-        // println!("{}", Instruction::Adc(09).to_asm_str());
-        // println!("{}", Instruction::Adc16(0xBEEF).to_asm_str());
-        println!("{}", disassemble(&code));
+        let code61: [u8; 4] = [0x61, 0xFF, 0xEE, 0xDD];
+        let code63: [u8; 4] = [0x63, 0xFF, 0xEE, 0xDD];
+        let code65: [u8; 4] = [0x65, 0xFF, 0xEE, 0xDD];
+        let code67: [u8; 4] = [0x67, 0xFF, 0xEE, 0xDD];
+        let code69: [u8; 4] = [0x69, 0xFF, 0xEE, 0xDD];
+        let code6D: [u8; 4] = [0x6D, 0xFF, 0xEE, 0xDD];
+        let code6F: [u8; 4] = [0x6F, 0xFF, 0xEE, 0xDD];
+        let code71: [u8; 4] = [0x71, 0xFF, 0xEE, 0xDD];
+       
+        println!("{}", disassemble(&code61));
+        println!("{}", disassemble(&code63));
+        println!("{}", disassemble(&code65));
+        println!("{}", disassemble(&code67));
+        println!("{}", disassemble(&code69));
+        println!("{}", disassemble(&code6D));
+        println!("{}", disassemble(&code6F));
+        println!("{}", disassemble(&code71));
+ 
         
         // App's master loop
         loop {
@@ -103,7 +117,7 @@ fn show_cpu_window<'a>(ui: &imgui::Ui<'a>, snes: &Snes) -> bool {
             ui.text(im_str!("Y: 0x{:04X}", cpu.get_y()));
             ui.spacing();
 
-            ui.text(im_str!("SP: 0x{:04X}", cpu.get_sp()));
+            ui.text(im_str!("S: 0x{:04X}", cpu.get_s()));
             ui.same_line(0.0);
             ui.text(im_str!("PC: 0x{:04X}", cpu.get_pc()));
 

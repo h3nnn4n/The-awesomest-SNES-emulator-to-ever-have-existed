@@ -142,6 +142,13 @@ pub trait ToAsmStr {
     fn to_asm_str(&self) -> AsmStr;
 }
 
+impl ToAsmStr for Register {
+    fn to_asm_str(&self) -> AsmStr {
+        (format!("{:?}", *self)).into()
+    }
+}
+
+
 impl ToAsmStr for u8 {
     fn to_asm_str(&self) -> AsmStr {
         (format!("${:02x}", *self)).into()
@@ -163,7 +170,7 @@ impl ToAsmStr for u32 {
 impl ToAsmStr for Operand {
     fn to_asm_str(&self) -> AsmStr {
         match *self {
-            // Operand::Reg(out)   => out.to_asm_str(),
+            Operand::Reg(out) => out.to_asm_str(),
             Operand::Imm8(out) => out.to_asm_str(),
             Operand::Imm16(out) => out.to_asm_str(),
             Operand::Imm24(out) => out.to_asm_str(),
@@ -188,7 +195,7 @@ fn unary_op<A: ToAsmStr>(op: &'static str, arg1: A, mode: AddressMode) -> AsmStr
         Mode::Imm8bit              => (format!("{} #{}", op, str1)).into(),
         Mode::Direct               => (format!("{} {}" , op, str1)).into(),
         Mode::DirectIndirect       => (format!("{} ({})", op, str1)).into(),
-        Mode::DirectIndirectLong   => (format!("{} [{}]", op, str1)).into(),
+        Mode::DirectIndirectLong   => (format!("{} [_{}_]", op, str1)).into(),
         Mode::Absolute             => (format!("{} {}", op, str1)).into(),
         Mode::AbsoluteLong         => (format!("{} {}", op, str1)).into(),
         Mode::AbsoluteIndirect     => (format!("{} ({})", op, str1)).into(),
@@ -228,6 +235,7 @@ fn ternary_op<A: ToAsmStr>(op: &'static str, arg1: A, arg2: A, arg3: A, mode: Ad
     let str1 = arg1.to_asm_str();
     let str2 = arg2.to_asm_str();
     let str3 = arg3.to_asm_str();
+    
     match mode {
         Mode::StackRelativeIndirectIndexed => (format!("{} {}, {}", op, str1, str2)).into(), 
         _ => panic!("Addressing mode disassembly not implemented"),
@@ -251,13 +259,25 @@ impl ToAsmStr for Instruction {
 pub fn disassemble(code: &[u8]) -> AsmStr {
     use self::Operand::*;
     use self::AddressMode::*;
+    use self::Register::*; // WARNING: many single character symbols are imported
 
-    let my16: u16 = ((code[2] as u16) << 8) & code[1] as u16;
-    let my8: u8 = code[1];
+    let as8: u8 = code[1];
+    let as16: u16 = ((code[2] as u16) << 8) | as8 as u16;
+    let as24: u32 = ((code[3] as u32) << 16) | as16 as u32;
 
     let opcode = code[0];
     let instr = match opcode {
-        0x69 => Instruction::Adc1(Imm8(my8), Imm8bit),
+        // ADC Instructions
+        0x61 => Instruction::Adc2(Imm8(as8), Reg(X), DirectIndirectIndexed),
+        0x63 => Instruction::Adc2(Imm8(as8), Reg(S), StackRelative),
+        0x65 => Instruction::Adc1(Imm8(as8), Direct),
+        0x67 => Instruction::Adc1(Imm8(as8), DirectIndirectLong),
+        0x69 => Instruction::Adc1(Imm8(as8), Imm8bit),
+        0x6D => Instruction::Adc1(Imm16(as16), Absolute),
+        0x6F => Instruction::Adc1(Imm24(as24), AbsoluteLong),
+        0x71 => Instruction::Adc2(Imm8(as8), Reg(Y), DirectIndirectIndexed),
+        0x72 => Instruction::Adc1(Imm8(as8), DirectIndirect),
+        0x73 => Instruction::Adc3(Imm8(as8), Reg(S), Reg(Y), StackRelativeIndirectIndexed),
         _ => panic!("Unknown opcode {}", opcode),
     };
 
