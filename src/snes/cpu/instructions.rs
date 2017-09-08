@@ -43,96 +43,97 @@ pub enum Instruction {
     Adc1(Operand, AddressMode),
     Adc2(Operand, Operand, AddressMode),
     Adc3(Operand, Operand, Operand, AddressMode),
-    And,
+    And1(Operand, AddressMode),
+    And2(Operand, Operand, AddressMode),
     Asl,
-    Bcc,
-    Bcs,
-    Beq,
-    Bit,
-    Bmi,
-    Bne,
-    Bpl,
-    Bra,
-    Brk,
-    Brl,
-    Bvc,
-    Bvs,
-    Clc,
-    Cli,
-    Clv,
-    Cmp,
-    Cop,
-    Cpx,
-    Cpy,
-    Dec,
-    Dex,
-    Dey,
-    Eor,
-    Inc,
-    Inx,
-    Iny,
-    Jml,
-    Jmp,
-    Jsl,
-    Jsr,
-    Lda,
-    Ldx,
-    Ldy,
-    Lsr,
-    Mvn,
-    Mvp,
-    Nop,
-    Ora,
-    Pea,
-    Pei,
-    Per,
-    Pha,
-    Phb,
-    Phd,
-    Phk,
-    Php,
-    Phx,
-    Phy,
-    Pla,
-    Plb,
-    Pld,
-    Plp,
-    Plx,
-    Ply,
-    Rep,
-    Rol,
-    Ror,
-    Rti,
-    Rtl,
-    Rts,
-    Sbc,
-    Sep,
-    Sec,
-    Sed,
-    Sei,
-    Sta,
-    Stp,
-    Stx,
-    Sty,
-    Stz,
-    Tax,
-    Tay,
-    Tcd,
-    Tcs,
-    Tdc,
-    Trb,
-    Tsb,
-    Tsc,
-    Tsx,
-    Txa,
-    Txs,
-    Txy,
-    Tya,
-    Tyx,
-    Wai,
-    Wdm,
-    Xba,
-    Xce,
+    // Bcc,
+    // Bcs,
+    // Beq,
+    // Bit,
+    // Bmi,
+    // Bne,
+    // Bpl,
+    // Bra,
+    // Brk,
+    // Brl,
+    // Bvc,
+    // Bvs,
+    // Clc,
+    // Cli,
+    // Clv,
+    // Cmp,
+    // Cop,
+    // Cpx,
+    // Cpy,
+    // Dec,
+    // Dex,
+    // Dey,
+    // Eor,
+    // Inc,
+    // Inx,
+    // Iny,
+    // Jml,
+    // Jmp,
+    // Jsl,
+    // Jsr,
+    // Lda,
+    // Ldx,
+    // Ldy,
+    // Lsr,
+    // Mvn,
+    // Mvp,
+    // Nop,
+    // Ora,
+    // Pea,
+    // Pei,
+    // Per,
+    // Pha,
+    // Phb,
+    // Phd,
+    // Phk,
+    // Php,
+    // Phx,
+    // Phy,
+    // Pla,
+    // Plb,
+    // Pld,
+    // Plp,
+    // Plx,
+    // Ply,
+    // Rep,
+    // Rol,
+    // Ror,
+    // Rti,
+    // Rtl,
+    // Rts,
+    // Sbc,
+    // Sep,
+    // Sec,
+    // Sed,
+    // Sei,
+    // Sta,
+    // Stp,
+    // Stx,
+    // Sty,
+    // Stz,
+    // Tax,
+    // Tay,
+    // Tcd,
+    // Tcs,
+    // Tdc,
+    // Trb,
+    // Tsb,
+    // Tsc,
+    // Tsx,
+    // Txa,
+    // Txs,
+    // Txy,
+    // Tya,
+    // Tyx,
+    // Wai,
+    // Wdm,
+    // Xba,
+    // Xce,
 }
 
 pub type AsmStr = Cow<'static, str>;
@@ -163,7 +164,7 @@ impl ToAsmStr for Operand {
     fn to_asm_str(&self) -> AsmStr {
         match *self {
             // Operand::Reg(out)   => out.to_asm_str(),
-            Operand::Imm8(out)  => out.to_asm_str(),
+            Operand::Imm8(out) => out.to_asm_str(),
             Operand::Imm16(out) => out.to_asm_str(),
             Operand::Imm24(out) => out.to_asm_str(),
             _ => panic!("Operand not supported"),
@@ -175,44 +176,85 @@ fn none_op(op: &'static str) -> AsmStr {
     op.into()
 }
 
-fn unary_op<A: ToAsmStr>(op: &'static str, arg: A, mode: AddressMode) -> AsmStr {
-    use self::AddressMode::*;
+
+#[cfg_attr(rustfmt, rustfmt_skip)]
+fn unary_op<A: ToAsmStr>(op: &'static str, arg1: A, mode: AddressMode) -> AsmStr {
+    use self::AddressMode as Mode;
     
-    let arg_str = arg.to_asm_str(); 
+    let str1 = arg1.to_asm_str(); 
     match mode {
-        Imm8 => (format!("{} #{}", op, arg_str)).into(),
-        _ => (format!("{} {}", op, arg_str)).into(),
+        Mode::ImmMemoryFlag        => (format!("{} #{}", op, str1)).into(),
+        Mode::ImmIndexFlag         => (format!("{} #{}", op, str1)).into(),
+        Mode::Imm8bit              => (format!("{} #{}", op, str1)).into(),
+        Mode::Direct               => (format!("{} {}" , op, str1)).into(),
+        Mode::DirectIndirect       => (format!("{} ({})", op, str1)).into(),
+        Mode::DirectIndirectLong   => (format!("{} [{}]", op, str1)).into(),
+        Mode::Absolute             => (format!("{} {}", op, str1)).into(),
+        Mode::AbsoluteLong         => (format!("{} {}", op, str1)).into(),
+        Mode::AbsoluteIndirect     => (format!("{} ({})", op, str1)).into(),
+        Mode::AbsoluteIndirectLong => (format!("{} ({})", op, str1)).into(),
+        _ => panic!("Addressing mode disassembly not implemented"),
     }
     
 }
 
-fn binary_op<A: ToAsmStr, B: ToAsmStr>(op: &'static str, arg1: A, arg2: B, mode: AddressMode) -> AsmStr {
-    let arg1_str = arg1.to_asm_str();
-    let arg2_str = arg2.to_asm_str();
+#[cfg_attr(rustfmt, rustfmt_skip)]
+fn binary_op<A: ToAsmStr>(op: &'static str, arg1: A, arg2: A, mode: AddressMode) -> AsmStr {
+    use self::AddressMode as Mode;
+    
+    let str1 = arg1.to_asm_str();
+    let str2 = arg2.to_asm_str();
     match mode {
-        _ => (format!("{} {}, {}", op, arg1_str, arg2_str)).into(),
+        Mode::DirectIndexX              => (format!("{} {}, {}", op, str1, str2)).into(),
+        Mode::DirectIndexY              => (format!("{} {}, {}", op, str1, str2)).into(),
+        Mode::DirectIndexedIndirect     => (format!("{} ({}, {})", op, str1, str2)).into(),
+        Mode::DirectIndirectIndexed     => (format!("{} ({}), {}", op, str1, str2)).into(),
+        Mode::DirectIndirectIndexedLong => (format!("{} [{}], {}", op, str1, str2)).into(),
+        Mode::AbsoluteIndexedX          => (format!("{} {}, {}", op, str1, str2)).into(),
+        Mode::AbsoluteIndexedY          => (format!("{} {}, {}", op, str1, str2)).into(),
+        Mode::AbsoluteIndexedLong       => (format!("{} {}, {}", op, str1, str2)).into(),
+        Mode::StackRelative             => (format!("{} {}, {}", op, str1, str2)).into(),
+        Mode::AbsoluteIndexedIndirect   => (format!("{} {}, {}", op, str1, str2)).into(),
+        Mode::BlockMove                 => (format!("{} {}, {}", op, str1, str2)).into(),
+        _ => panic!("Addressing mode disassembly not implemented"),
     }
+}
+
+
+#[cfg_attr(rustfmt, rustfmt_skip)]
+fn ternary_op<A: ToAsmStr>(op: &'static str, arg1: A, arg2: A, arg3: A, mode: AddressMode) -> AsmStr {
+    use self::AddressMode as Mode;
     
-    
+    let str1 = arg1.to_asm_str();
+    let str2 = arg2.to_asm_str();
+    let str3 = arg3.to_asm_str();
+    match mode {
+        Mode::StackRelativeIndirectIndexed => (format!("{} {}, {}", op, str1, str2)).into(), 
+        _ => panic!("Addressing mode disassembly not implemented"),
+    }
 }
 
 impl ToAsmStr for Instruction {
     fn to_asm_str(&self) -> AsmStr {
         use self::Instruction::*;
         match *self {
-            Adc1(op0, mode)      => unary_op ("ADC", op0, mode),
-            Adc2(op0, op1, mode) => binary_op ("ADC", op0, op1, mode), 
+            Adc1(op0, mode) => unary_op("ADC", op0, mode),
+            Adc2(op0, op1, mode) => binary_op("ADC", op0, op1, mode),
+            And1(op0, mode) => unary_op("AND", op0, mode),
+            And2(op0, op1, mode) => binary_op("AND", op0, op1, mode),
             _ => panic!("¯\\_(ツ)_/¯"),
         }
     }
 }
 
 
-pub fn disassemble (code: &[u8]) -> AsmStr {
+pub fn disassemble(code: &[u8]) -> AsmStr {
     use self::Operand::*;
     use self::AddressMode::*;
+
     let my16: u16 = ((code[2] as u16) << 8) & code[1] as u16;
     let my8: u8 = code[1];
+
     let opcode = code[0];
     let instr = match opcode {
         0x69 => Instruction::Adc1(Imm8(my8), Imm8bit),
