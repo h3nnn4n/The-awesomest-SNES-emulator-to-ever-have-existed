@@ -286,6 +286,14 @@ pub fn disassemble(code: &[u8]) -> AsmStr {
 
         // ASL Instructions
         // ...
+
+        // Branch Instructions 
+        // ...
+
+        // Clear Instructions 
+        // ...
+
+        // ...
         
         _ => panic!("Unknown opcode {}", opcode),
     };
