@@ -1,5 +1,6 @@
 use std::fmt;
 
+// Helpers
 #[derive(Clone, Copy)]
 pub enum RomType {
     Unknown,
@@ -24,25 +25,27 @@ impl fmt::Display for RomType {
     }
 }
 
+pub trait DataSize {
+    fn as_kb(&self) -> f32;
+    fn as_mb(&self) -> f32;
+}
+
+impl DataSize for usize {
+    fn as_kb(&self) -> f32 {
+        *self as f32 / 1024 as f32
+    }
+
+    fn as_mb(&self) -> f32 {
+        *self as f32 / (1024 * 1024) as f32
+    }
+}
+
+// Cartridge
 pub struct Cartridge {
     data: Vec<u8>,
     rom_type: RomType,
 }
 
-pub trait DataSize {
-    fn as_KB(&self) -> f32;
-    fn as_MB(&self) -> f32;
-}
-
-impl DataSize for usize {
-    fn as_KB(&self) -> f32 {
-        *self as f32 / 1024 as f32
-    }
-
-    fn as_MB(&self) -> f32 {
-        *self as f32 / (1024 * 1024) as f32
-    }
-}
 
 impl Cartridge {
     pub fn new(file_path: &'static str) -> Cartridge {

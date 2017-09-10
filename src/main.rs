@@ -36,10 +36,10 @@ impl App {
     pub fn run(&mut self) {
 
         let cart = Cartridge::new("./target/roms/Super Mario World (U) [!].smc");
-        println!("Cart size: {:.2} MB", cart.get_total_size().as_MB()); 
+        println!("Cart size: {:.2} MB", cart.get_total_size().as_mb());
         println!("Type: {}", cart.get_type());
         println!("SMC header size: {} B", cart.get_smc_header_size());
-        
+
         let mut delta_time = 16.666667;
         let code61: [u8; 4] = [0x61, 0xFF, 0xEE, 0xDD];
         let code63: [u8; 4] = [0x63, 0xFF, 0xEE, 0xDD];
